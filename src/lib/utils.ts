@@ -5,8 +5,21 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+function parseApiDate(date: string | Date): Date {
+  if (date instanceof Date) {
+    return date
+  }
+
+  const isoWithoutTimezone = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2}(?:\.\d{1,6})?)?$/
+  if (isoWithoutTimezone.test(date)) {
+    return new Date(`${date}Z`)
+  }
+
+  return new Date(date)
+}
+
 export function formatDate(date: string | Date): string {
-  return new Date(date).toLocaleDateString('en-US', {
+  return parseApiDate(date).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
@@ -15,7 +28,7 @@ export function formatDate(date: string | Date): string {
 
 export function formatRelativeTime(date: string | Date): string {
   const now = new Date()
-  const past = new Date(date)
+  const past = parseApiDate(date)
   const diffMs = now.getTime() - past.getTime()
   const diffMins = Math.floor(diffMs / 60000)
   const diffHours = Math.floor(diffMins / 60)
