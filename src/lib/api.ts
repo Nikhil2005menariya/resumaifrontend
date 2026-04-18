@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 // Use relative URLs so Vercel's middleware can rewrite /api/* to backend
-const API_URL = import.meta.env.VITE_API_URL || '/api'
+const API_URL = '/api'
 
 export const api = axios.create({
   baseURL: API_URL,
